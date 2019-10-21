@@ -74,7 +74,22 @@ function renderImage(post){
     caption.innerHTML = post.caption;
     likes.innerHTML = `<i class="fas fa-bread-slice"></i> ${post.likes.length}`;
     likes.addEventListener('click', function(){
-        console.log("Likes!");
+        fetch('http://localhost:3000/likes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'Application/JSON'
+            },
+            body: JSON.stringify({
+                user: CURRENT_USER,
+                post: post
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            likes.innerHTML = `<i class="fas fa-bread-slice"></i> ${parseInt(likes.innerText) + 1}`;
+            console.log('geting here');
+            likes.classList.add('liked');
+        })
     })
 
     if(post.comments){

@@ -34,3 +34,7 @@ img {
     list-style-type: none;
     margin: 0; 
 }
+
+i .liked {
+    color: red
+}

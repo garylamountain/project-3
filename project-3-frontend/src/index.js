@@ -72,7 +72,10 @@ function renderImage(post){
 
     img.src = post.src;
     caption.innerHTML = post.caption;
-    likes.innerHTML = `<i class="fas fa-bread-slice"></i> ${post.likes}`;
+    likes.innerHTML = `<i class="fas fa-bread-slice"></i> ${post.likes.length}`;
+    likes.addEventListener('click', function(){
+        console.log("Likes!");
+    })
 
     if(post.comments){
         post.comments.slice(0, 5).forEach(comment => {

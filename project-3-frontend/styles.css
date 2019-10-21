@@ -1,3 +1,36 @@
+.tile {
+    width: 400px;
+    background-color: bisque;
+    overflow: hidden;
+    padding: 5px;
+    margin-bottom: 20px;
+}
+
 img {
-    max-width: 400px;
+    width: 100%;
+}
+
+.caption-div {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    background-color: azure;
+}
+
+.cap {
+    font-size: 110%;
+    font-weight: 700;
+}
+
+.likes {
+    font-size: 110%;
+}
+
+.comment-div {
+    background-color: aliceblue;
+}
+
+.comment-list {
+    list-style-type: none;
+    margin: 0; 
 }

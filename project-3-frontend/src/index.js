@@ -56,13 +56,19 @@ function renderImage(post){
     let feed = document.querySelector('#feed');
     
     let topDiv = document.createElement('div');
-    let captionDiv = document.createElement('div')
+    topDiv.setAttribute('class', 'tile');
+    let captionDiv = document.createElement('div');
+    captionDiv.setAttribute('class', 'caption-div');
     let commentDiv = document.createElement('div');
+    commentDiv.setAttribute('class', 'comment-div');
 
     let img = document.createElement('img');
     let caption = document.createElement('p');
+    caption.setAttribute('class', 'cap');
     let likes = document.createElement('p');
+    likes.setAttribute('class', 'likes');
     let commentSection = document.createElement('ul');
+    commentSection.setAttribute('class', 'comment-list');
 
     img.src = post.src;
     caption.innerHTML = post.caption;

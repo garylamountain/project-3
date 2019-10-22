@@ -69,9 +69,27 @@ function renderImage(post){
     let user = document.createElement('p');
     user.innerHTML = `Posted By: Username`;
     let likes = document.createElement('p');
+    let i = document.createElement('i');
     likes.setAttribute('class', 'likes');
-    likes.innerHTML = `<i class="fas fa-bread-slice"></i> ${post.likes.length}`;
+    i.setAttribute('class','fas fa-bread-slice')
+    i.setAttribute('style','color:black;')
+    likes.append(i, ` ${post.likes.length}`);
+    likes.addEventListener('click', function(){
+        if(i.style.color == 'red'){
+            //handleUnlike(post, likes, i);
+            likes.innerHTML = '';
+            i.setAttribute('style','color:black;');
+            likes.append(i, ` ${post.likes.length}`);
+        } else if (i.style.color == 'black'){
+            //handleLike(post, likes, i);
+            likes.innerHTML = '';
+            i.setAttribute('style','color:red;');
+            likes.append(i, ` ${post.likes.length + 1}`);
+        }
+    })
     
+
+
     //right side with caption and comments
     let rightDiv = document.createElement('div');
     rightDiv.setAttribute('class', 'right-div');
@@ -81,19 +99,49 @@ function renderImage(post){
     let commentDiv = document.createElement('div');
     commentDiv.setAttribute('class', 'comment-div');
     let commentSection = document.createElement('ul');
+    commentSection.setAttribute('id',`comments-${post.id}`)
     commentSection.setAttribute('class', 'comment-list');    
     if(post.comments){
-        post.comments.slice(0, 5).forEach(comment => {
+        post.comments.forEach(comment => {
             let li = document.createElement('li');
             li.innerHTML = comment.content;
             commentSection.appendChild(li);
         })
     }
-
+    let input = document.createElement('input');
+    input.setAttribute('type','text');
+    let submitBtn = document.createElement('button');
+    submitBtn.innerHTML = 'Comment';
+    submitBtn.addEventListener('click', function(){
+        submitComment(input.value, post);
+        input.value = "";
+    })
     infoDiv.append(user, likes);
-    commentDiv.append(commentSection);
+    commentDiv.append(commentSection, input, submitBtn);
     rightDiv.append(caption, commentDiv);
     leftDiv.append(img,infoDiv)
     topDiv.append(leftDiv, rightDiv);
     feed.append(topDiv);
+}
+
+function submitComment(comment, post){
+    console.log(comment)
+    fetch('http://localhost:3000/comments', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "Application/JSON"
+        },
+        body: JSON.stringify({
+            user: CURRENT_USER,
+            post: post,
+            content: comment
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        let commentSection = document.querySelector(`#comments-${post.id}`)
+        let li = document.createElement('li');
+        li.innerHTML = data.content;
+        commentSection.appendChild(li);
+    })
 }

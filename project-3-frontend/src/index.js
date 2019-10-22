@@ -8,7 +8,15 @@ document.addEventListener('DOMContentLoaded', function(){
     document.querySelector('#new-post-submit').addEventListener('click', function(e) {
         e.preventDefault();
         //console.log(e.target.parentNode.caption.value)
-        submitPost(e.target.parentNode);
+        if(e.target.parentNode.parentNode.url.value != '' && e.target.parentNode.parentNode.url.value) {
+            submitPost(e.target.parentNode.parentNode);
+        } else {
+            alert("Please enter a valid URL")
+        }
+    })
+
+    document.querySelector('.nav-post-btn').addEventListener('click', function() {
+        document.querySelector('#new-post').classList.toggle('hidden');
     })
 })
 
@@ -16,6 +24,7 @@ function signIn() {
     var person = prompt("Please enter your name", "Your Name Here");
     if (person != null) {
       CURRENT_USER = person;
+      document.querySelector('.nav-user').innerHTML = `<a><i class="fas fa-user"></i> ${person}</a>`
     }
 }
 
@@ -75,7 +84,7 @@ function renderImage(post){
     let img = document.createElement('img');
     img.src = post.src;
     let user = document.createElement('p');
-    user.innerHTML = `Posted By: Username`;
+    user.innerHTML = `Posted By: ${post.user.username}`;
     let likes = document.createElement('p');
     let i = document.createElement('i');
     likes.setAttribute('class', 'likes');
@@ -201,5 +210,7 @@ function submitPost(form){
     .then(res => res.json())
     .then(data => {
         renderImage(data);
+        form.url.value = ''
+        form.caption.value = ''
     })
 }

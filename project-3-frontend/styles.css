@@ -4,24 +4,26 @@
 
 /* NAVBAR */
 .navbar {
+    display: flex;
+    justify-content: space-around;
     list-style-type: none;
     margin: 0;
     padding: 5px 0;
     height: 50px;
     overflow: hidden;
     background-color: #bbb;
+    text-align: center;
     box-shadow: 0 -2px 3px 3px #000;
-  }
+}
 
 .nav-logo {
-    padding-left: 200px;
     height: 50px;
     width: auto;
 }
   
 .nav-item {
     float: left;
-  }
+}
   
 .nav-item a {
     display: block;
@@ -31,19 +33,51 @@
     padding: 15px 10px;
     height: 20px;
     transition: border-bottom 0.3s;
-  }
-
-.nav-user {
-    padding-right: 200px;
 }
   
 .nav-item a:hover {
     border-bottom: 5px solid #4CAF50;
-  }
+}
+
+.nav-post-btn {
+    font-size: 120%;
+    display: block;
+    color: #111;
+    text-align: center;
+    text-decoration: none;
+    padding: 15px 20px;
+    height: 20px;
+    transition: border-bottom 0.3s;
+}
+
+.nav-post-btn:hover {
+    cursor: pointer;
+    border-bottom: 5px solid #4CAF50;
+}
 
 /* CONTENT */
 #feed {
     padding: 75px 0;
+}
+
+#new-post {
+    text-align: center;
+    padding-top: 25px;
+}
+
+form div input {
+    font-size: 150%;
+    width: 50%;
+    margin: 5px 0;
+}
+
+form div button {
+    font-size: 125%;
+    width: 25%;
+}
+
+.hidden {
+    display: none;
 }
 
 .tile {
@@ -81,8 +115,4 @@ img {
 .comment-list {
     list-style-type: none;
     margin: 0; 
-}
-
-i .liked {
-    color: red
 }

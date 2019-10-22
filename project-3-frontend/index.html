@@ -10,15 +10,22 @@
     <header>
       <ul class="navbar">
         <li class="nav-item"><img class="nav-logo" src="https://static.thenounproject.com/png/13443-200.png"></li>
+        <li class="nav-item nav-post-btn"><i class="fas fa-camera"></i></li>
         <li class="nav-item nav-user" style="float:right"><a class="active" href="#about"><i class="fas fa-user"></i> User</a></li>
       </ul>
     </header>
 
     <main>
-      <form id="new-post">
-        <input type="text" id="url" placeholder= "Enter URL">
-        <input type="text" id="caption" placeholder= "Enter Caption">
-        <button id="new-post-submit">Submit</button>
+      <form id="new-post" class="hidden">
+        <div>
+            <input type="text" id="url" placeholder= "Enter URL">
+        </div>
+        <div>
+            <input type="text" id="caption" placeholder= "Enter Caption">
+        </div>
+        <div>
+            <button id="new-post-submit">Submit</button>
+        </div>
       </form>
       <div id="feed">
         <!-- 

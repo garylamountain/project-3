@@ -59,38 +59,19 @@ function renderImage(post){
     topDiv.setAttribute('class', 'tile');
     let captionDiv = document.createElement('div');
     captionDiv.setAttribute('class', 'caption-div');
+    captionDiv.setAttribute('id',`caption-div-${post.id}`);
     let commentDiv = document.createElement('div');
     commentDiv.setAttribute('class', 'comment-div');
 
     let img = document.createElement('img');
     let caption = document.createElement('p');
     caption.setAttribute('class', 'cap');
-    let likes = document.createElement('p');
-    likes.setAttribute('class', 'likes');
+
     let commentSection = document.createElement('ul');
     commentSection.setAttribute('class', 'comment-list');
 
     img.src = post.src;
     caption.innerHTML = post.caption;
-    likes.innerHTML = `<i class="fas fa-bread-slice"></i> ${post.likes.length}`;
-    likes.addEventListener('click', function(){
-        fetch('http://localhost:3000/likes', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'Application/JSON'
-            },
-            body: JSON.stringify({
-                user: CURRENT_USER,
-                post: post
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            likes.innerHTML = `<i class="fas fa-bread-slice"></i> ${parseInt(likes.innerText) + 1}`;
-            console.log('geting here');
-            likes.classList.add('liked');
-        })
-    })
 
     if(post.comments){
         post.comments.slice(0, 5).forEach(comment => {
@@ -99,10 +80,86 @@ function renderImage(post){
         commentSection.appendChild(li);
     })
     }
-    
 
-    captionDiv.append(caption, likes);
+    captionDiv.append(caption);
     commentDiv.append(commentSection);
     topDiv.append(img, captionDiv, commentDiv);
     feed.append(topDiv);
+
+    fetchLikes(post);
+
+}
+
+function fetchLikes(post){
+    let likes = document.createElement('p');
+    let i = document.createElement('i');
+    likes.setAttribute('class', 'likes');
+    i.setAttribute('class','fas fa-bread-slice')
+    likes.append(i, ` ${post.likes.length}`);
+    if(post.likes.some(like => CURRENT_USER.id == like.user_id)){
+        i.setAttribute('style','color:red;')
+    } else {
+        i.setAttribute('style','color:black;')
+    }
+    likes.addEventListener('click', function(){
+        if(i.style.color == 'red'){
+            i.setAttribute('style','color:black;')
+            handleUnlike(post, likes, i);
+
+        } else if (i.style.color == 'black'){
+            i.setAttribute('style','color:red;')
+            handleLike(post, likes, i);
+
+        }
+    })
+
+    let captionDiv = document.getElementById(`caption-div-${post.id}`);
+    captionDiv.append(likes);
+}
+
+function handleLike(post, likes, i){
+    console.log('liked');
+    fetch('http://localhost:3000/likes', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'Application/JSON'
+        },
+        body: JSON.stringify({
+            user: CURRENT_USER,
+            post: post
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+    })
+    likes.innerHTML = '';
+    i.setAttribute('style','color:red;')
+    likes.append(i, ` ${parseInt(post.likes.length) + 1}`);
+}
+
+function handleUnlike(likes, i, post, data){
+    if(i.style.color == 'red'){
+    console.log('unliked');
+    console.log(likes);
+    console.log(i);
+    console.log(post);
+    console.log(data);
+    let like = post.likes.find(like => CURRENT_USER.id == like.user_id);
+    if(!like){
+        like = data;
+    }
+    fetch(`http://localhost:3000/likes/${like.id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'Application/JSON'
+        },
+        body: JSON.stringify({
+            id: like.id
+        })
+    })
+    likes.innerHTML = '';
+    i.setAttribute('style','color:black;')
+    likes.append(i, ` ${parseInt(post.likes.length) - 1}`);
+    }
 }

@@ -12,4 +12,9 @@ class LikesController < ApplicationController
         render json: like.to_json
     end
 
+    def destroy
+        like = Like.find_by(id: params[:id])
+        like.destroy
+    end
+
 end

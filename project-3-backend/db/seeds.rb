@@ -81,7 +81,3 @@ comment3 = Comment.create(content: "No way thats gross. Plus a poptart isnt a sa
 comment4 = Comment.create(content: "Uh yeah it is dummy face", user: user1, post: post22);
 comment5 = Comment.create(content: "Prepare for a knuckle sandwich nerd", user: user2, post: post22);
 comment6 = Comment.create(content: "Aight bet", user: user1, post: post22);
-
-like1 = Like.create(user: user2, post: post1)
-like2 = Like.create(user: user3, post: post1)
-like3 = Like.create(user: user2, post: post2)

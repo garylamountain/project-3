@@ -46,10 +46,13 @@ function fetchAllPosts(){
     // h.innerHTML = `Let's get this bread, ${CURRENT_USER.username}!`;
     fetch('http://localhost:3000/posts')
     .then(res => res.json())
-    .then(data => data.forEach(post => {
+    .then(data => {
+        let sorted = data.sort(function(a, b) {return a.id - b.id})
+        sorted.forEach(post => {
         renderImage(post);
+        })
     })
-    )
+    
 }
 
 function renderImage(post){
@@ -73,22 +76,20 @@ function renderImage(post){
     likes.setAttribute('class', 'likes');
     i.setAttribute('class','fas fa-bread-slice')
     i.setAttribute('style','color:black;')
-    likes.append(i, ` ${post.likes.length}`);
+    likes.append(i, ` ${post.likes}`);
     likes.addEventListener('click', function(){
         if(i.style.color == 'red'){
-            //handleUnlike(post, likes, i);
+            handleUnlike(post);
             likes.innerHTML = '';
             i.setAttribute('style','color:black;');
-            likes.append(i, ` ${post.likes.length}`);
+            likes.append(i, ` ${post.likes}`);
         } else if (i.style.color == 'black'){
-            //handleLike(post, likes, i);
+            handleLike(post);
             likes.innerHTML = '';
             i.setAttribute('style','color:red;');
-            likes.append(i, ` ${post.likes.length + 1}`);
+            likes.append(i, ` ${post.likes + 1}`);
         }
     })
-    
-
 
     //right side with caption and comments
     let rightDiv = document.createElement('div');
@@ -99,7 +100,7 @@ function renderImage(post){
     let commentDiv = document.createElement('div');
     commentDiv.setAttribute('class', 'comment-div');
     let commentSection = document.createElement('ul');
-    commentSection.setAttribute('id',`comments-${post.id}`)
+    commentSection.setAttribute('id',`${post.likes}`)
     commentSection.setAttribute('class', 'comment-list');    
     if(post.comments){
         post.comments.forEach(comment => {
@@ -143,5 +144,39 @@ function submitComment(comment, post){
         let li = document.createElement('li');
         li.innerHTML = data.content;
         commentSection.appendChild(li);
+    })
+}
+
+function handleUnlike(post){
+    fetch(`http://localhost:3000/posts/${post.id}`,{
+        method: 'PATCH',
+        headers: {
+            "Content-Type": "Application/JSON",
+            "Accept": "Application/JSON"
+        },
+        body: JSON.stringify({
+            likes: post.likes
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data)
+    })
+}
+
+function handleLike(post){
+    fetch(`http://localhost:3000/posts/${post.id}`,{
+        method: 'PATCH',
+        headers: {
+            "Content-Type": "Application/JSON",
+            "Accept": "Application/JSON"
+        },
+        body: JSON.stringify({
+            likes: post.likes + 1
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data)
     })
 }

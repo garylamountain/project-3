@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', function(){
         signIn();
     }
     fetchUser(CURRENT_USER);
+    document.querySelector('#new-post-submit').addEventListener('click', function(e) {
+        e.preventDefault();
+        //console.log(e.target.parentNode.caption.value)
+        submitPost(e.target.parentNode);
+    })
 })
 
 function signIn() {
@@ -100,7 +105,7 @@ function renderImage(post){
     let commentDiv = document.createElement('div');
     commentDiv.setAttribute('class', 'comment-div');
     let commentSection = document.createElement('ul');
-    commentSection.setAttribute('id',`${post.likes}`)
+    commentSection.setAttribute('id',`comments-${post.id}`)
     commentSection.setAttribute('class', 'comment-list');    
     if(post.comments){
         post.comments.forEach(comment => {
@@ -126,7 +131,6 @@ function renderImage(post){
 }
 
 function submitComment(comment, post){
-    console.log(comment)
     fetch('http://localhost:3000/comments', {
         method: 'POST',
         headers: {
@@ -178,5 +182,24 @@ function handleLike(post){
     .then(res => res.json())
     .then(data => {
         console.log(data)
+    })
+}
+
+function submitPost(form){
+    fetch('http://localhost:3000/posts', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "Application/JSON"
+        },
+        body: JSON.stringify({
+            src: form.url.value,
+            caption: form.caption.value,
+            likes: 0,
+            user: CURRENT_USER
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        renderImage(data);
     })
 }

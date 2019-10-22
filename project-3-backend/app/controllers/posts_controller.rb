@@ -15,4 +15,10 @@ class PostsController < ApplicationController
         render json: post.to_json(:include => :comments)
     end
 
+    def create
+        user = User.find_by(id: params[:user][:id])
+        post = Post.create(src: params[:src], caption: params[:caption], likes: params[:likes], user: user)
+        render json: post.to_json
+    end
+
 end

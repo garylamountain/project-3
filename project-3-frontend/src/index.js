@@ -82,9 +82,10 @@ function renderImage(post){
     let infoDiv = document.createElement('div');
     infoDiv.setAttribute('class', 'info-div');
     let img = document.createElement('img');
+    img.setAttribute('class', 'tile-img')
     img.src = post.src;
     let user = document.createElement('p');
-    user.innerHTML = `Posted By: ${post.user.username}`;
+    // user.innerHTML = `Posted By: ${post.user.username}`;
     let likes = document.createElement('p');
     let i = document.createElement('i');
     likes.setAttribute('class', 'likes');
@@ -108,23 +109,25 @@ function renderImage(post){
     //right side with caption and comments
     let rightDiv = document.createElement('div');
     rightDiv.setAttribute('class', 'right-div');
-    let caption = document.createElement('p');
-    caption.setAttribute('class', 'cap');
-    caption.innerHTML = post.caption;
     let commentDiv = document.createElement('div');
     commentDiv.setAttribute('class', 'comment-div');
     let commentSection = document.createElement('ul');
     commentSection.setAttribute('id',`comments-${post.id}`)
-    commentSection.setAttribute('class', 'comment-list');    
+    commentSection.setAttribute('class', 'comment-list');   
+    let caption = document.createElement('li');
+    caption.setAttribute('id', `posted-by-${post.id}`);
+    caption.innerHTML = `<strong>Posted: </strong>${post.caption}`;
+    commentSection.appendChild(caption);
     if(post.comments){
         post.comments.forEach(comment => {
             let li = document.createElement('li');
-            li.innerHTML = comment.content;
+            li.innerHTML = `${comment.content}`;
             commentSection.appendChild(li);
         })
     }
-    let input = document.createElement('input');
+    let input = document.createElement('textarea');
     input.setAttribute('type','text');
+    input.setAttribute('placeholder', 'Enter Comment Here')
     let submitBtn = document.createElement('button');
     submitBtn.innerHTML = 'Comment';
     submitBtn.addEventListener('click', function(){
@@ -132,8 +135,8 @@ function renderImage(post){
         input.value = "";
     })
     infoDiv.append(user, likes);
-    commentDiv.append(commentSection, input, submitBtn);
-    rightDiv.append(caption, commentDiv);
+    commentDiv.append(commentSection);
+    rightDiv.append(commentDiv, input, submitBtn);
     leftDiv.append(img,infoDiv)
     topDiv.append(leftDiv, rightDiv);
     feed.append(topDiv);
@@ -202,7 +205,7 @@ function submitPost(form){
         },
         body: JSON.stringify({
             src: form.url.value,
-            caption: form.caption.value,
+            caption: form.text.value,
             likes: 0,
             user: CURRENT_USER
         })
@@ -211,6 +214,6 @@ function submitPost(form){
     .then(data => {
         renderImage(data);
         form.url.value = ''
-        form.caption.value = ''
+        form.text.value = ''
     })
 }

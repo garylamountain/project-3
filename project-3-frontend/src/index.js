@@ -93,7 +93,7 @@ function renderImage(post){
     i.setAttribute('style','color:black;')
     likes.append(i, ` ${post.likes}`);
     likes.addEventListener('click', function(){
-        if(i.style.color == 'red'){
+        if(i.style.color == 'sandybrown'){
             handleUnlike(post);
             likes.innerHTML = '';
             i.setAttribute('style','color:black;');
@@ -101,7 +101,7 @@ function renderImage(post){
         } else if (i.style.color == 'black'){
             handleLike(post);
             likes.innerHTML = '';
-            i.setAttribute('style','color:red;');
+            i.setAttribute('style','color:sandybrown;');
             likes.append(i, ` ${post.likes + 1}`);
         }
     })
@@ -116,20 +116,21 @@ function renderImage(post){
     commentSection.setAttribute('class', 'comment-list');   
     let caption = document.createElement('li');
     caption.setAttribute('id', `posted-by-${post.id}`);
-    caption.innerHTML = `<strong>Posted: </strong>${post.caption}`;
+    caption.innerHTML = `<i class="fas fa-user-circle"></i> <strong>Posted: </strong> <br>${post.caption}`;
     commentSection.appendChild(caption);
     if(post.comments){
         post.comments.forEach(comment => {
             let li = document.createElement('li');
-            li.innerHTML = `${comment.content}`;
+            li.innerHTML = `<i class="fas fa-user-circle"></i> Comment: <br>${comment.content}`;
             commentSection.appendChild(li);
         })
     }
     let input = document.createElement('textarea');
     input.setAttribute('type','text');
-    input.setAttribute('placeholder', 'Enter Comment Here')
+    input.setAttribute('placeholder', 'Share your thoughts...')
     let submitBtn = document.createElement('button');
-    submitBtn.innerHTML = 'Comment';
+    submitBtn.setAttribute('class', 'comment-btn');
+    submitBtn.innerHTML = '<i class="far fa-comment-dots"></i> Comment';
     submitBtn.addEventListener('click', function(){
         submitComment(input.value, post);
         input.value = "";

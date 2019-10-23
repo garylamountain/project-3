@@ -119,6 +119,15 @@ function renderImage(post){
     img.setAttribute('class', 'tile-img')
     img.src = post.src;
     img.setAttribute('onerror',"this.onerror=null;this.src='http://www.oogazone.com/wp-content/uploads/2018/09/top-sandwich-delicious-food-kawaii-cute-cartoon-vector-library.jpg'")
+    let report = document.createElement('p');
+    if(true){ //not reported
+        report.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Not a sandwich?';
+        report.addEventListener('click', function(){
+            reportPost(post);
+        })
+    } else { //i.e. if reported
+        report.innerHTML = '<i class="fas fa-frown"></i> This post is under investigation.';
+    }
     let user = document.createElement('p');
     let likes = document.createElement('p');
     let i = document.createElement('i');
@@ -172,13 +181,12 @@ function renderImage(post){
         submitComment(input.value, post);
         input.value = "";
     })
-    infoDiv.append(user, likes);
+    infoDiv.append(report, user, likes);
     commentDiv.append(commentSection);
     rightDiv.append(commentDiv, input, submitBtn);
     leftDiv.append(img,infoDiv)
     topDiv.append(leftDiv, rightDiv);
     feed.prepend(topDiv);
-
 }
 
 function submitComment(comment, post){
@@ -281,6 +289,47 @@ function filterPosts(username){
             feed.innerHTML = `<h1 style="text-align:center"> Sorry, ${username.trim()} doesn't have any posts yet! :'( </h1>`;
         }
     })
+}
+
+function reportPost(post){
+    let feed = document.querySelector('main');
+    let modalDiv = document.createElement('div');
+    modalDiv.setAttribute('id','myModal');
+    modalDiv.setAttribute('class','modal');
+    let modalContent = document.createElement('div');
+    modalContent.setAttribute('class','modal-content');
+    let span = document.createElement('span');
+    span.setAttribute('class','close');
+    span.innerHTML = '&times;';
+    let modalText = document.createElement('p');
+    modalText.innerHTML = "It looks like you want to report an image. We'd like to remind you to please keep an open mind and consult the chart below. Any food enveloped in any way can be considered a sandwich. If you would still like to report this post as not a sandwich, after having a philosophical debate with yourself, please provide a reason below as to why you think this is not a sandwich and press 'REPORT'.";
+    let img = document.createElement('img');
+    img.setAttribute('id','modal-image');
+    img.src = 'https://i0.wp.com/flowingdata.com/wp-content/uploads/2017/05/Sandwich-alignment-chart.jpg?resize=720%2C495&ssl=1';
+    //let reason = document.createElement('textarea');
+    let confirmBtn = document.createElement('button');
+    confirmBtn.setAttribute('id','report-button');
+    confirmBtn.innerHTML = 'REPORT';
+    modalContent.append(span, modalText, img, confirmBtn);
+    modalDiv.append(modalContent);
+    feed.append(modalDiv);
+
+    modalDiv.style.display = 'block';
+
+    confirmBtn.addEventListener('click', function(){
+        modalDiv.style.display = 'none';  
+    })
+
+    span.addEventListener('click', function(){
+        modalDiv.style.display = 'none';  
+    })
+    
+    window.addEventListener('click', function(){
+        if(event.target == modalDiv){
+            modalDiv.style.display = 'none';  
+        }
+    })
+
 }
 
 main()

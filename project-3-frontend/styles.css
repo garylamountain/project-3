@@ -318,3 +318,7 @@ textarea {
   #to-top:hover {
     bottom: 40px;
   }
+
+  .filter {
+      cursor: pointer;
+  }

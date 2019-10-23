@@ -164,6 +164,7 @@ function renderImage(post){
 }
 
 function submitComment(comment, post){
+    if(comment){
     fetch('http://localhost:3000/comments', {
         method: 'POST',
         headers: {
@@ -183,6 +184,7 @@ function submitComment(comment, post){
         li.innerHTML = `<strong>${CURRENT_USER.username}</strong> ${data.content}`;
         commentSection.appendChild(li);
     })
+}
 }
 
 function handleUnlike(post){

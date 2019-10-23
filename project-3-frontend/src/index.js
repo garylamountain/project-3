@@ -77,7 +77,7 @@ function fetchAllPosts(){
         sorted.forEach(post => {
         renderImage(post);
         })
-        let comments = document.querySelectorAll('.comment-list li');
+        let comments = document.querySelectorAll('.filter');
         comments.forEach(comment => {
             comment.addEventListener('click', function(event){
                 filterPosts(event.target.innerText);
@@ -101,8 +101,8 @@ function renderImage(post){
     let img = document.createElement('img');
     img.setAttribute('class', 'tile-img')
     img.src = post.src;
+    img.setAttribute('onerror',"this.onerror=null;this.src='http://www.oogazone.com/wp-content/uploads/2018/09/top-sandwich-delicious-food-kawaii-cute-cartoon-vector-library.jpg'")
     let user = document.createElement('p');
-    // user.innerHTML = `Posted By: ${post.user.username}`;
     let likes = document.createElement('p');
     let i = document.createElement('i');
     likes.setAttribute('class', 'likes');
@@ -133,15 +133,15 @@ function renderImage(post){
     commentSection.setAttribute('class', 'comment-list');   
     let caption = document.createElement('li');
     if(post.user == undefined){
-        caption.innerHTML = `<strong>${CURRENT_USER.username} </strong>${post.caption}`;
+        caption.innerHTML = `<strong class="filter">${CURRENT_USER.username} </strong>${post.caption}`;
     } else {
-        caption.innerHTML = `<strong>${post.user.username} </strong>${post.caption}`;    
+        caption.innerHTML = `<strong class="filter">${post.user.username} </strong>${post.caption}`;    
     }
     commentSection.appendChild(caption);
     if(post.comments){
         post.comments.forEach(comment => {
             let li = document.createElement('li');
-            li.innerHTML = `<strong>${ALL_USERS[comment.user_id - 1].username}</strong> ${comment.content}`;
+            li.innerHTML = `<strong class="filter">${ALL_USERS[comment.user_id - 1].username}</strong> ${comment.content}`;
             commentSection.appendChild(li);
         })
     }
@@ -181,7 +181,7 @@ function submitComment(comment, post){
         let commentSection = document.querySelector(`#comments-${post.id}`)
         let li = document.createElement('li');
         li.innerHTML = data.content;
-        li.innerHTML = `<strong>${CURRENT_USER.username}</strong> ${data.content}`;
+        li.innerHTML = `<strong class="filter">${CURRENT_USER.username}</strong> ${data.content}`;
         commentSection.appendChild(li);
     })
 }
@@ -253,12 +253,15 @@ function filterPosts(username){
             renderImage(post);
         }
         })
-        let comments = document.querySelectorAll('.comment-list li');
+        let comments = document.querySelectorAll('.filter');
         comments.forEach(comment => {
             comment.addEventListener('click', function(event){
                 filterPosts(event.target.innerHTML);
             })
         })
+        if(feed.innerHTML == ''){
+            feed.innerHTML = `<h1 style="text-align:center"> Sorry, ${username.trim()} doesn't have any posts yet! :'( </h1>`;
+        }
     })
 }
 

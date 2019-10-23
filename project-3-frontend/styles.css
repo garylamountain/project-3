@@ -11,7 +11,7 @@
     padding: 5px 0;
     height: 50px;
     overflow: hidden;
-    background-color: #bbb;
+    background-color: powderblue;
     text-align: center;
     box-shadow: 0 -2px 3px 3px #000;
 }
@@ -57,7 +57,7 @@
 
 /* CONTENT */
 #feed {
-    padding: 75px 0;
+    padding: 50px 0;
 }
 
 #new-post {
@@ -81,21 +81,33 @@ form div button {
 }
 
 .tile {
-    width: 400px;
-    background-color: bisque;
-    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    width: 800px;
+    background-color: powderblue;
     padding: 5px;
-    margin-bottom: 20px;
+    margin: 20px auto;
+    box-shadow: 0 0 1px #333;
+    border-radius: 3px;
 }
 
-img {
-    width: 100%;
+.left-div {
+    margin: 10px;
+    width: 350px;
+    overflow: hidden;
+    box-shadow: 0 0 1px #333;
+}
+
+.tile-img {
+    min-width: 350px;
+    height: 350px;
+    margin-bottom: -5px;
 }
 
 .info-div {
     display: flex;
     justify-content: space-between;
-    padding: 0 20px;
+    padding: 10px 20px;
     background-color: azure;
 }
 
@@ -108,11 +120,30 @@ img {
     font-size: 110%;
 }
 
+.right-div {
+    width: 390px;
+    padding: 10px;
+}
+
 .comment-div {
     background-color: aliceblue;
+    height: 275px;
+    background-color: #fff;
+    overflow: auto;
 }
 
 .comment-list {
     list-style-type: none;
-    margin: 0; 
+    padding: 0 10px;
+}
+
+.comment-list li {
+    font-size: 90%;
+    padding: 10px 0 ;
+    border-bottom: 0.5px solid #888;
+}
+
+textarea {
+    width: 385px;
+    height: 75px;
 }

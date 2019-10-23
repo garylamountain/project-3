@@ -163,6 +163,7 @@ form div button:hover {
 
 .likes {
     font-size: 110%;
+    cursor: pointer;
 }
 
 .right-div {
@@ -195,7 +196,6 @@ textarea {
     padding: 10px;
     border:none;
     outline: none;
-    /* color: sandybrown */
 }
 
 .comment-btn {
@@ -213,6 +213,10 @@ textarea {
     transform: rotate(-12deg);
 }
 
+.report-link:hover  {
+    color: crimson;
+    cursor: pointer;
+}
 
 .modal {
     display: none; /* Hidden by default */

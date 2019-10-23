@@ -120,6 +120,7 @@ function renderImage(post){
     img.src = post.src;
     img.setAttribute('onerror',"this.onerror=null;this.src='http://www.oogazone.com/wp-content/uploads/2018/09/top-sandwich-delicious-food-kawaii-cute-cartoon-vector-library.jpg'")
     let report = document.createElement('p');
+    report.setAttribute('class', 'report-link');
     report.setAttribute('id',`report-${post.id}`)
     if(!post.is_reported){ //not reported
         report.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Not a sandwich?';

@@ -78,7 +78,7 @@ end
 50.times do 
     postNum = rand(0..(src.length - 1))
     user = users[rand(0..(users.length - 1))]
-    post = Post.create(src: src[postNum], caption: Faker::Food.description, user: user, likes: 0);
+    post = Post.create(src: src[postNum], caption: Faker::Food.description, user: user, likes: 0, is_reported: false);
     rand(0.. 6).times do
         Comment.create(content: Faker::Hipster.sentence, user: users[rand(0..(users.length - 1))], post: post);
     end

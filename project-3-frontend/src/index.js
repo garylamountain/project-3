@@ -120,7 +120,8 @@ function renderImage(post){
     img.src = post.src;
     img.setAttribute('onerror',"this.onerror=null;this.src='http://www.oogazone.com/wp-content/uploads/2018/09/top-sandwich-delicious-food-kawaii-cute-cartoon-vector-library.jpg'")
     let report = document.createElement('p');
-    if(true){ //not reported
+    report.setAttribute('id',`report-${post.id}`)
+    if(!post.is_reported){ //not reported
         report.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Not a sandwich?';
         report.addEventListener('click', function(){
             reportPost(post);
@@ -318,6 +319,23 @@ function reportPost(post){
 
     confirmBtn.addEventListener('click', function(){
         modalDiv.style.display = 'none';  
+        fetch(`http://localhost:3000/posts/${post.id}`,{
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "Application/JSON",
+                "Accept": "Application/JSON"
+            },
+            body: JSON.stringify({
+                likes: post.likes,
+                is_reported: true
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            let report = document.querySelector(`#report-${data.id}`);
+            report.innerHTML = '<i class="fas fa-frown"></i> This post is under investigation.';
+        })
     })
 
     span.addEventListener('click', function(){

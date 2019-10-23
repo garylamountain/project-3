@@ -1,4 +1,5 @@
 let CURRENT_USER = '';
+let ALL_USERS = [];
 
 document.addEventListener('DOMContentLoaded', function(){
     while(CURRENT_USER == ''){
@@ -7,9 +8,8 @@ document.addEventListener('DOMContentLoaded', function(){
     fetchUser(CURRENT_USER);
     document.querySelector('#new-post-submit').addEventListener('click', function(e) {
         e.preventDefault();
-        //console.log(e.target.parentNode.caption.value)
         if(e.target.parentNode.parentNode.url.value != '' && e.target.parentNode.parentNode.url.value) {
-            submitPost(e.target.parentNode.parentNode);
+            submitPost(e.target.parentNode.parentNode, CURRENT_USER);
         } else {
             alert("Please enter a valid URL")
         }
@@ -32,6 +32,7 @@ function fetchUser(username){
     fetch('http://localhost:3000/users')
     .then(res => res.json())
     .then(data => {
+        ALL_USERS = data;
         data.forEach(user => {
         if(user.username == CURRENT_USER){
             CURRENT_USER = user;
@@ -56,8 +57,6 @@ function fetchUser(username){
 }
 
 function fetchAllPosts(){
-    // let h = document.querySelector('#greeting');
-    // h.innerHTML = `Let's get this bread, ${CURRENT_USER.username}!`;
     fetch('http://localhost:3000/posts')
     .then(res => res.json())
     .then(data => {
@@ -116,12 +115,18 @@ function renderImage(post){
     commentSection.setAttribute('class', 'comment-list');   
     let caption = document.createElement('li');
     caption.setAttribute('id', `posted-by-${post.id}`);
-    caption.innerHTML = `<strong>Posted: </strong>${post.caption}`;
+    if(post.user == undefined){
+        caption.innerHTML = `<strong>${CURRENT_USER.username} </strong>${post.caption}`;
+    } else {
+        caption.innerHTML = `<strong>${post.user.username} </strong>${post.caption}`;    
+    }
     commentSection.appendChild(caption);
     if(post.comments){
         post.comments.forEach(comment => {
+            console.log(comment)
+            console.log(ALL_USERS)
             let li = document.createElement('li');
-            li.innerHTML = `${comment.content}`;
+            li.innerHTML = `<strong>${ALL_USERS[comment.user_id - 1].username}</strong> ${comment.content}`;
             commentSection.appendChild(li);
         })
     }
@@ -159,6 +164,7 @@ function submitComment(comment, post){
         let commentSection = document.querySelector(`#comments-${post.id}`)
         let li = document.createElement('li');
         li.innerHTML = data.content;
+        li.innerHTML = `<strong>${CURRENT_USER.username}</strong> ${data.content}`;
         commentSection.appendChild(li);
     })
 }
@@ -197,7 +203,7 @@ function handleLike(post){
     })
 }
 
-function submitPost(form){
+function submitPost(form, user){
     fetch('http://localhost:3000/posts', {
         method: 'POST',
         headers: {
@@ -207,7 +213,7 @@ function submitPost(form){
             src: form.url.value,
             caption: form.text.value,
             likes: 0,
-            user: CURRENT_USER
+            user: user
         })
     })
     .then(res => res.json())

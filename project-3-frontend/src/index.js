@@ -160,7 +160,7 @@ function renderImage(post){
     rightDiv.append(commentDiv, input, submitBtn);
     leftDiv.append(img,infoDiv)
     topDiv.append(leftDiv, rightDiv);
-    feed.append(topDiv);
+    feed.prepend(topDiv);
 
 }
 

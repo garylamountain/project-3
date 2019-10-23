@@ -101,8 +101,8 @@ function renderImage(post){
     let img = document.createElement('img');
     img.setAttribute('class', 'tile-img')
     img.src = post.src;
+    img.setAttribute('onerror',"this.onerror=null;this.src='http://www.oogazone.com/wp-content/uploads/2018/09/top-sandwich-delicious-food-kawaii-cute-cartoon-vector-library.jpg'")
     let user = document.createElement('p');
-    // user.innerHTML = `Posted By: ${post.user.username}`;
     let likes = document.createElement('p');
     let i = document.createElement('i');
     likes.setAttribute('class', 'likes');

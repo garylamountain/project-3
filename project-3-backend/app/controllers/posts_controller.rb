@@ -18,6 +18,7 @@ class PostsController < ApplicationController
     def create
         user = User.find_by(id: params[:user][:id])
         post = Post.create(src: params[:src], caption: params[:caption], likes: params[:likes], user: user)
+        p post
         render json: post.to_json
     end
 

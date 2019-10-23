@@ -1,24 +1,37 @@
 let CURRENT_USER = '';
+let ALL_USERS = [];
 
-document.addEventListener('DOMContentLoaded', function(){
-    while(CURRENT_USER == ''){
-        signIn();
-    }
-    fetchUser(CURRENT_USER);
-    document.querySelector('#new-post-submit').addEventListener('click', function(e) {
-        e.preventDefault();
-        //console.log(e.target.parentNode.caption.value)
-        if(e.target.parentNode.parentNode.url.value != '' && e.target.parentNode.parentNode.url.value) {
-            submitPost(e.target.parentNode.parentNode);
-        } else {
-            alert("Please enter a valid URL")
+function main(){
+    document.addEventListener('DOMContentLoaded', function(){
+        while(CURRENT_USER == ''){
+            signIn();
         }
-    })
+        fetchUser(CURRENT_USER);
+        document.querySelector('#new-post-submit').addEventListener('click', function(e) {
+            e.preventDefault();
+            if(e.target.parentNode.parentNode.url.value != '' && e.target.parentNode.parentNode.url.value) {
+                submitPost(e.target.parentNode.parentNode, CURRENT_USER);
+            } else {
+                alert("Please enter a valid URL")
+            }
+        })
 
-    document.querySelector('.nav-post-btn').addEventListener('click', function() {
-        document.querySelector('#new-post').classList.toggle('hidden');
+        document.querySelector('.nav-post-btn').addEventListener('click', function() {
+            document.querySelector('#new-post').classList.toggle('hidden');
+        })
+
+        let home = document.querySelector('.nav-logo');
+        home.addEventListener('click', function(){
+            feed.innerHTML = '';
+            fetchAllPosts();
+        })
+
+        let profile = document.querySelector('.nav-user');
+        profile.addEventListener('click', function(){
+            filterPosts(CURRENT_USER.username);
+        })
     })
-})
+}
 
 function signIn() {
     var person = prompt("Please enter your name", "Your Name Here");
@@ -32,6 +45,7 @@ function fetchUser(username){
     fetch('http://localhost:3000/users')
     .then(res => res.json())
     .then(data => {
+        ALL_USERS = data;
         data.forEach(user => {
         if(user.username == CURRENT_USER){
             CURRENT_USER = user;
@@ -56,8 +70,6 @@ function fetchUser(username){
 }
 
 function fetchAllPosts(){
-    // let h = document.querySelector('#greeting');
-    // h.innerHTML = `Let's get this bread, ${CURRENT_USER.username}!`;
     fetch('http://localhost:3000/posts')
     .then(res => res.json())
     .then(data => {
@@ -65,8 +77,13 @@ function fetchAllPosts(){
         sorted.forEach(post => {
         renderImage(post);
         })
+        let comments = document.querySelectorAll('.comment-list li');
+        comments.forEach(comment => {
+            comment.addEventListener('click', function(event){
+                filterPosts(event.target.innerText);
+            })
+        })
     })
-    
 }
 
 function renderImage(post){
@@ -115,13 +132,16 @@ function renderImage(post){
     commentSection.setAttribute('id',`comments-${post.id}`)
     commentSection.setAttribute('class', 'comment-list');   
     let caption = document.createElement('li');
-    caption.setAttribute('id', `posted-by-${post.id}`);
-    caption.innerHTML = `<strong>Posted: </strong>${post.caption}`;
+    if(post.user == undefined){
+        caption.innerHTML = `<strong>${CURRENT_USER.username} </strong>${post.caption}`;
+    } else {
+        caption.innerHTML = `<strong>${post.user.username} </strong>${post.caption}`;    
+    }
     commentSection.appendChild(caption);
     if(post.comments){
         post.comments.forEach(comment => {
             let li = document.createElement('li');
-            li.innerHTML = `${comment.content}`;
+            li.innerHTML = `<strong>${ALL_USERS[comment.user_id - 1].username}</strong> ${comment.content}`;
             commentSection.appendChild(li);
         })
     }
@@ -140,9 +160,11 @@ function renderImage(post){
     leftDiv.append(img,infoDiv)
     topDiv.append(leftDiv, rightDiv);
     feed.append(topDiv);
+
 }
 
 function submitComment(comment, post){
+    if(comment){
     fetch('http://localhost:3000/comments', {
         method: 'POST',
         headers: {
@@ -159,8 +181,10 @@ function submitComment(comment, post){
         let commentSection = document.querySelector(`#comments-${post.id}`)
         let li = document.createElement('li');
         li.innerHTML = data.content;
+        li.innerHTML = `<strong>${CURRENT_USER.username}</strong> ${data.content}`;
         commentSection.appendChild(li);
     })
+}
 }
 
 function handleUnlike(post){
@@ -197,7 +221,7 @@ function handleLike(post){
     })
 }
 
-function submitPost(form){
+function submitPost(form, user){
     fetch('http://localhost:3000/posts', {
         method: 'POST',
         headers: {
@@ -207,7 +231,7 @@ function submitPost(form){
             src: form.url.value,
             caption: form.text.value,
             likes: 0,
-            user: CURRENT_USER
+            user: user
         })
     })
     .then(res => res.json())
@@ -217,3 +241,25 @@ function submitPost(form){
         form.text.value = ''
     })
 }
+
+function filterPosts(username){
+    feed.innerHTML = '';
+    fetch('http://localhost:3000/posts')
+    .then(res => res.json())
+    .then(data => {
+        let sorted = data.sort(function(a, b) {return a.id - b.id})
+        sorted.forEach(post => {
+        if(post.user.username.trim() == username.trim()){
+            renderImage(post);
+        }
+        })
+        let comments = document.querySelectorAll('.comment-list li');
+        comments.forEach(comment => {
+            comment.addEventListener('click', function(event){
+                filterPosts(event.target.innerHTML);
+            })
+        })
+    })
+}
+
+main()

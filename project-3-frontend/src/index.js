@@ -35,7 +35,7 @@ function main(){
         // When the user scrolls down 20px from the top of the document, show the button
         window.onscroll = function() {scrollFunction()};
         function scrollFunction() {
-            if (document.body.scrollTop < 20 || document.documentElement.scrollTop > 20) {
+            if (document.documentElement.scrollTop > 60) {
                 mybutton.style.display = "block";
             } else {
                 mybutton.style.display = "none";
@@ -317,6 +317,12 @@ function submitComment(comment, post){
     })
     .then(res => res.json())
     .then(data => {
+        const myNotification = window.createNotification();
+        myNotification({
+            message: 'Comment successfully saved',
+            showDuration: 1500,
+            theme: 'success'
+        }) 
         let commentSection = document.querySelector(`#comments-${post.id}`)
         let li = document.createElement('li');
         li.innerHTML = data.content;
@@ -356,6 +362,12 @@ function submitPost(form, user){
     })
     .then(res => res.json())
     .then(data => {
+        const myNotification = window.createNotification();
+        myNotification({
+            message: 'Post successfully saved',
+            showDuration: 1500,
+            theme: 'success'
+        }) 
         renderImage(data);
         form.url.value = ''
         form.text.value = ''

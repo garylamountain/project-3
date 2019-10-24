@@ -156,8 +156,8 @@ function renderImage(post){
                 likes.innerHTML = '';
                 i.setAttribute('style','color:sandybrown;');
                 down.setAttribute('style','color:black');
-                likes.append(i, ` ${post.likes + 1} `, down);
-                handleChange(post, post.likes + 1);
+                likes.append(i, ` ${post.likes} `, down);
+                handleChange(post, post.likes);
                 userLoaf(post, 'up');
             }
         })
@@ -166,15 +166,15 @@ function renderImage(post){
             if(down.style.color == 'crimson'){
                 likes.innerHTML = '';
                 down.setAttribute('style','color:black;');
-                likes.append(i, ` ${post.likes} `, down);
-                handleChange(post, post.likes);
+                likes.append(i, ` ${post.likes - 1} `, down);
+                handleChange(post, post.likes - 1);
                 userTrash(post, 'down');
             } else if (down.style.color == 'black'){
                 likes.innerHTML = '';
                 down.setAttribute('style','color:crimson;');
                 i.setAttribute('style','color:black');
-                likes.append(i, ` ${post.likes - 1} `, down);
-                handleChange(post, post.likes - 1);
+                likes.append(i, ` ${post.likes - 2} `, down);
+                handleChange(post, post.likes - 2);
                 userTrash(post, 'up');
             }
         })
@@ -187,15 +187,15 @@ function renderImage(post){
             if(i.style.color == 'sandybrown'){
                 likes.innerHTML = '';
                 i.setAttribute('style','color:black;');
-                likes.append(i, ` ${post.likes - 1} `, down);
-                handleChange(post, post.likes - 1);
+                likes.append(i, ` ${post.likes + 1} `, down);
+                handleChange(post, post.likes + 1);
                 userLoaf(post, 'down');
             } else if (i.style.color == 'black'){
                 likes.innerHTML = '';
                 i.setAttribute('style','color:sandybrown;');
                 down.setAttribute('style','color:black');
-                likes.append(i, ` ${post.likes + 1} `, down);
-                handleChange(post, post.likes + 1);
+                likes.append(i, ` ${post.likes + 2} `, down);
+                handleChange(post, post.likes + 2);
                 userLoaf(post, 'up');
             }
         })
@@ -211,8 +211,8 @@ function renderImage(post){
                 likes.innerHTML = '';
                 down.setAttribute('style','color:crimson;');
                 i.setAttribute('style','color:black');
-                likes.append(i, ` ${post.likes - 1} `, down);
-                handleChange(post, post.likes - 1);
+                likes.append(i, ` ${post.likes} `, down);
+                handleChange(post, post.likes);
                 userTrash(post, 'up');
             }
         })
@@ -448,7 +448,6 @@ function reportPost(post){
             infoDiv.prepend(newLink);
         })
         .catch(error => console.error(error))
-        handleChange(post, post.likes);
     })
 
     span.addEventListener('click', function(){

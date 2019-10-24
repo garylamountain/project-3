@@ -70,7 +70,7 @@ src = [
 ]
 
 users = []
-25.times do 
+15.times do 
     user = User.create(username: Faker::Internet.username);
     users << user
 end

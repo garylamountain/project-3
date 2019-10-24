@@ -103,6 +103,10 @@ function fetchAllPosts(){
         })
     })
     .catch(error => console.error(error))
+    let aboutUs = document.createElement('a');
+    aboutUs.href = "https://i.imgur.com/cu4n513.png";
+    aboutUs.innerHTML = "About Us"
+    feed.append(aboutUs);
 }
 
 function renderImage(post){

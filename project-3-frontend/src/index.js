@@ -84,6 +84,7 @@ function fetchUser(username){
             })
         }
     })
+    .catch(error => console.error(error))
 }
 
 function fetchAllPosts(){
@@ -101,6 +102,7 @@ function fetchAllPosts(){
             })
         })
     })
+    .catch(error => console.error(error))
 }
 
 function renderImage(post){
@@ -120,9 +122,9 @@ function renderImage(post){
     img.src = post.src;
     img.setAttribute('onerror',"this.onerror=null;this.src='http://www.oogazone.com/wp-content/uploads/2018/09/top-sandwich-delicious-food-kawaii-cute-cartoon-vector-library.jpg'")
     let report = document.createElement('p');
-    report.setAttribute('class', 'report-link');
     report.setAttribute('id',`report-${post.id}`)
     if(!post.is_reported){ //not reported
+        report.setAttribute('class', 'report-link');
         report.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Not a sandwich?';
         report.addEventListener('click', function(){
             reportPost(post);
@@ -176,6 +178,13 @@ function renderImage(post){
     let input = document.createElement('textarea');
     input.setAttribute('type','text');
     input.setAttribute('placeholder', 'Share your thoughts...')
+    input.addEventListener('keypress', function(event){
+        if(event.key == "Enter" && input.value.trim() != '' ){
+            console.log(input.value);
+            submitComment(input.value, post);
+            input.value = "";
+        }
+    })
     let submitBtn = document.createElement('button');
     submitBtn.setAttribute('class', 'comment-btn');
     submitBtn.innerHTML = '<i class="far fa-comment-dots"></i> Comment';
@@ -212,6 +221,7 @@ function submitComment(comment, post){
         li.innerHTML = `<i class="fas fa-user-circle"></i> <strong class="filter">${CURRENT_USER.username}</strong><br>${data.content}`;
         commentSection.appendChild(li);
     })
+    .catch(error => console.error(error))
 }
 }
 
@@ -226,10 +236,7 @@ function handleUnlike(post){
             likes: post.likes
         })
     })
-    .then(res => res.json())
-    .then(data => {
-        console.log(data)
-    })
+    .catch(error => console.error(error))
 }
 
 function handleLike(post){
@@ -243,10 +250,7 @@ function handleLike(post){
             likes: post.likes + 1
         })
     })
-    .then(res => res.json())
-    .then(data => {
-        console.log(data)
-    })
+    .catch(error => console.error(error))
 }
 
 function submitPost(form, user){
@@ -269,6 +273,7 @@ function submitPost(form, user){
         form.text.value = ''
         document.querySelector('#new-post').classList.toggle('hidden');
     })
+    .catch(error => console.error(error))
 }
 
 function filterPosts(username){
@@ -292,6 +297,7 @@ function filterPosts(username){
             feed.innerHTML = `<h1 style="text-align:center"> Sorry, ${username.trim()} doesn't have any posts yet! :'( </h1>`;
         }
     })
+    .catch(error => console.error(error))
 }
 
 function reportPost(post){
@@ -305,11 +311,10 @@ function reportPost(post){
     span.setAttribute('class','close');
     span.innerHTML = '&times;';
     let modalText = document.createElement('p');
-    modalText.innerHTML = "It looks like you want to report an image. We'd like to remind you to please keep an open mind and consult the chart below. Any food enveloped in any way can be considered a sandwich. If you would still like to report this post as not a sandwich, after having a philosophical debate with yourself, please provide a reason below as to why you think this is not a sandwich and press 'REPORT'.";
+    modalText.innerHTML = "It looks like you want to report an image. We'd like to remind you to please <a href='https://www.youtube.com/embed/4Au0K2D3tLA?controls=0&amp;start=45'>keep an open mind</a> and consult the chart below. Any food enveloped in any way can be considered a sandwich. If you would still like to report this post as not a sandwich, after having a philosophical debate with yourself, please provide a reason below as to why you think this is not a sandwich and press 'REPORT'.";
     let img = document.createElement('img');
     img.setAttribute('id','modal-image');
     img.src = 'https://i0.wp.com/flowingdata.com/wp-content/uploads/2017/05/Sandwich-alignment-chart.jpg?resize=720%2C495&ssl=1';
-    //let reason = document.createElement('textarea');
     let confirmBtn = document.createElement('button');
     confirmBtn.setAttribute('id','report-button');
     confirmBtn.innerHTML = 'REPORT';
@@ -335,8 +340,14 @@ function reportPost(post){
         .then(res => res.json())
         .then(data => {
             let report = document.querySelector(`#report-${data.id}`);
-            report.innerHTML = '<i class="fas fa-frown"></i> This post is under investigation.';
+            report.innerHTML = '';
+            let newLink = document.createElement('p');
+            newLink.innerHTML = '<i class="fas fa-frown"></i> This post is under investigation.';
+            let infoDiv = report.parentNode;
+            infoDiv.removeChild(report);
+            infoDiv.prepend(newLink);
         })
+        .catch(error => console.error(error))
     })
 
     span.addEventListener('click', function(){

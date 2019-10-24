@@ -448,6 +448,7 @@ function reportPost(post){
             infoDiv.prepend(newLink);
         })
         .catch(error => console.error(error))
+        handleChange(post, post.likes);
     })
 
     span.addEventListener('click', function(){

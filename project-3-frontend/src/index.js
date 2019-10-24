@@ -84,6 +84,7 @@ function fetchUser(username){
             })
         }
     })
+    .catch(error => console.error(error))
 }
 
 function fetchAllPosts(){
@@ -101,6 +102,7 @@ function fetchAllPosts(){
             })
         })
     })
+    .catch(error => console.error(error))
 }
 
 function renderImage(post){
@@ -219,6 +221,7 @@ function submitComment(comment, post){
         li.innerHTML = `<i class="fas fa-user-circle"></i> <strong class="filter">${CURRENT_USER.username}</strong><br>${data.content}`;
         commentSection.appendChild(li);
     })
+    .catch(error => console.error(error))
 }
 }
 
@@ -233,10 +236,7 @@ function handleUnlike(post){
             likes: post.likes
         })
     })
-    .then(res => res.json())
-    .then(data => {
-        console.log(data)
-    })
+    .catch(error => console.error(error))
 }
 
 function handleLike(post){
@@ -250,10 +250,7 @@ function handleLike(post){
             likes: post.likes + 1
         })
     })
-    .then(res => res.json())
-    .then(data => {
-        console.log(data)
-    })
+    .catch(error => console.error(error))
 }
 
 function submitPost(form, user){
@@ -276,6 +273,7 @@ function submitPost(form, user){
         form.text.value = ''
         document.querySelector('#new-post').classList.toggle('hidden');
     })
+    .catch(error => console.error(error))
 }
 
 function filterPosts(username){
@@ -299,6 +297,7 @@ function filterPosts(username){
             feed.innerHTML = `<h1 style="text-align:center"> Sorry, ${username.trim()} doesn't have any posts yet! :'( </h1>`;
         }
     })
+    .catch(error => console.error(error))
 }
 
 function reportPost(post){
@@ -343,6 +342,7 @@ function reportPost(post){
             let report = document.querySelector(`#report-${data.id}`);
             report.innerHTML = '<i class="fas fa-frown"></i> This post is under investigation.';
         })
+        .catch(error => console.error(error))
     })
 
     span.addEventListener('click', function(){

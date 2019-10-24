@@ -10,6 +10,12 @@ class UsersController < ApplicationController
         render json: user.to_json
     end
     
+    def update
+        user = User.find_by(id: params[:id])
+        user.update(liked_posts: params[:liked_posts], disliked_posts: params[:disliked_posts])
+        render json: user.to_json
+    end
+
     def create
         user = User.create(username: params[:username])
         render json: user.to_json

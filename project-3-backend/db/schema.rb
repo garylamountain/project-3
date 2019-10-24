@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_23_202253) do
+ActiveRecord::Schema.define(version: 2019_10_24_160213) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,8 @@ ActiveRecord::Schema.define(version: 2019_10_23_202253) do
     t.string "username"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "liked_posts", default: [], array: true
+    t.integer "disliked_posts", default: [], array: true
   end
 
   add_foreign_key "comments", "posts"

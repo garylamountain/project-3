@@ -20,7 +20,7 @@ function main(){
             document.querySelector('#new-post').classList.toggle('hidden');
         })
 
-        let home = document.querySelector('.nav-logo');
+        let home = document.querySelector('.home-logo');
         home.addEventListener('click', function(){
             feed.innerHTML = '';
             fetchAllPosts();
@@ -267,6 +267,7 @@ function submitPost(form, user){
         renderImage(data);
         form.url.value = ''
         form.text.value = ''
+        document.querySelector('#new-post').classList.toggle('hidden');
     })
 }
 
@@ -333,7 +334,6 @@ function reportPost(post){
         })
         .then(res => res.json())
         .then(data => {
-            console.log(data)
             let report = document.querySelector(`#report-${data.id}`);
             report.innerHTML = '<i class="fas fa-frown"></i> This post is under investigation.';
         })

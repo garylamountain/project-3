@@ -135,24 +135,127 @@ function renderImage(post){
     let user = document.createElement('p');
     let likes = document.createElement('p');
     let i = document.createElement('i');
+    let down = document.createElement('i');
     likes.setAttribute('class', 'likes');
-    i.setAttribute('class','fas fa-bread-slice')
-    i.setAttribute('style','color:black;')
-    likes.append(i, ` ${post.likes}`);
-    likes.addEventListener('click', function(){
-        if(i.style.color == 'sandybrown'){
-            handleUnlike(post);
-            likes.innerHTML = '';
-            i.setAttribute('style','color:black;');
-            likes.append(i, ` ${post.likes}`);
-        } else if (i.style.color == 'black'){
-            handleLike(post);
-            likes.innerHTML = '';
-            i.setAttribute('style','color:sandybrown;');
-            likes.append(i, ` ${post.likes + 1}`);
-        }
-    })
+    i.setAttribute('class','fas fa-bread-slice');
+    down.setAttribute('class','far fa-trash-alt');
 
+    if(CURRENT_USER.liked_posts.includes(post.id)){
+        i.setAttribute('style','color:sandybrown;');
+        down.setAttribute('style','color:black;');
+
+        likes.append(i, ` ${post.likes} `, down);
+        i.addEventListener('click', function(){
+            if(i.style.color == 'sandybrown'){
+                likes.innerHTML = '';
+                i.setAttribute('style','color:black;');
+                likes.append(i, ` ${post.likes - 1} `, down);
+                handleChange(post, post.likes - 1);
+                userLoaf(post, 'down');
+            } else if (i.style.color == 'black'){
+                likes.innerHTML = '';
+                i.setAttribute('style','color:sandybrown;');
+                down.setAttribute('style','color:black');
+                likes.append(i, ` ${post.likes + 1} `, down);
+                handleChange(post, post.likes + 1);
+                userLoaf(post, 'up');
+            }
+        })
+    
+        down.addEventListener('click', function(){
+            if(down.style.color == 'crimson'){
+                likes.innerHTML = '';
+                down.setAttribute('style','color:black;');
+                likes.append(i, ` ${post.likes} `, down);
+                handleChange(post, post.likes);
+                userTrash(post, 'down');
+            } else if (down.style.color == 'black'){
+                likes.innerHTML = '';
+                down.setAttribute('style','color:crimson;');
+                i.setAttribute('style','color:black');
+                likes.append(i, ` ${post.likes - 1} `, down);
+                handleChange(post, post.likes - 1);
+                userTrash(post, 'up');
+            }
+        })
+    } else if(CURRENT_USER.disliked_posts.includes(post.id)){
+        i.setAttribute('style','color:black;');
+        down.setAttribute('style','color:crimson;');
+
+        likes.append(i, ` ${post.likes} `, down);
+        i.addEventListener('click', function(){
+            if(i.style.color == 'sandybrown'){
+                likes.innerHTML = '';
+                i.setAttribute('style','color:black;');
+                likes.append(i, ` ${post.likes - 1} `, down);
+                handleChange(post, post.likes - 1);
+                userLoaf(post, 'down');
+            } else if (i.style.color == 'black'){
+                likes.innerHTML = '';
+                i.setAttribute('style','color:sandybrown;');
+                down.setAttribute('style','color:black');
+                likes.append(i, ` ${post.likes + 1} `, down);
+                handleChange(post, post.likes + 1);
+                userLoaf(post, 'up');
+            }
+        })
+    
+        down.addEventListener('click', function(){
+            if(down.style.color == 'crimson'){
+                likes.innerHTML = '';
+                down.setAttribute('style','color:black;');
+                likes.append(i, ` ${post.likes + 1} `, down);
+                handleChange(post, post.likes + 1);
+                userTrash(post, 'down');
+            } else if (down.style.color == 'black'){
+                likes.innerHTML = '';
+                down.setAttribute('style','color:crimson;');
+                i.setAttribute('style','color:black');
+                likes.append(i, ` ${post.likes - 1} `, down);
+                handleChange(post, post.likes - 1);
+                userTrash(post, 'up');
+            }
+        })
+    } else {
+        i.setAttribute('style','color:black;');
+        down.setAttribute('style','color:black;');
+
+        likes.append(i, ` ${post.likes} `, down);
+        i.addEventListener('click', function(){
+            if(i.style.color == 'sandybrown'){
+                likes.innerHTML = '';
+                i.setAttribute('style','color:black;');
+                likes.append(i, ` ${post.likes} `, down);
+                handleChange(post, post.likes);
+                userLoaf(post, 'down');
+            } else if (i.style.color == 'black'){
+                likes.innerHTML = '';
+                i.setAttribute('style','color:sandybrown;');
+                down.setAttribute('style','color:black');
+                likes.append(i, ` ${post.likes + 1} `, down);
+                handleChange(post, post.likes + 1);
+                userLoaf(post, 'up');
+            }
+        })
+    
+        down.addEventListener('click', function(){
+            if(down.style.color == 'crimson'){
+                likes.innerHTML = '';
+                down.setAttribute('style','color:black;');
+                likes.append(i, ` ${post.likes} `, down);
+                handleChange(post, post.likes);
+                userTrash(post, 'down');
+            } else if (down.style.color == 'black'){
+                likes.innerHTML = '';
+                down.setAttribute('style','color:crimson;');
+                i.setAttribute('style','color:black');
+                likes.append(i, ` ${post.likes - 1} `, down);
+                handleChange(post, post.likes - 1);
+                userTrash(post, 'up');
+            }
+        })
+    }
+    
     //right side with caption and comments
     let rightDiv = document.createElement('div');
     rightDiv.setAttribute('class', 'right-div');
@@ -180,7 +283,6 @@ function renderImage(post){
     input.setAttribute('placeholder', 'Share your thoughts...')
     input.addEventListener('keypress', function(event){
         if(event.key == "Enter" && input.value.trim() != '' ){
-            console.log(input.value);
             submitComment(input.value, post);
             input.value = "";
         }
@@ -231,7 +333,7 @@ function submitComment(comment, post){
 }
 }
 
-function handleUnlike(post){
+function handleChange(post, likes){
     fetch(`http://localhost:3000/posts/${post.id}`,{
         method: 'PATCH',
         headers: {
@@ -239,21 +341,7 @@ function handleUnlike(post){
             "Accept": "Application/JSON"
         },
         body: JSON.stringify({
-            likes: post.likes
-        })
-    })
-    .catch(error => console.error(error))
-}
-
-function handleLike(post){
-    fetch(`http://localhost:3000/posts/${post.id}`,{
-        method: 'PATCH',
-        headers: {
-            "Content-Type": "Application/JSON",
-            "Accept": "Application/JSON"
-        },
-        body: JSON.stringify({
-            likes: post.likes + 1
+            likes: likes
         })
     })
     .catch(error => console.error(error))
@@ -360,6 +448,7 @@ function reportPost(post){
             infoDiv.prepend(newLink);
         })
         .catch(error => console.error(error))
+        handleChange(post, post.likes);
     })
 
     span.addEventListener('click', function(){
@@ -371,7 +460,90 @@ function reportPost(post){
             modalDiv.style.display = 'none';  
         }
     })
-
 }
 
 main()
+
+function userLoaf(post, str){
+    if(str == 'up'){ //add post to user liked_posts
+        CURRENT_USER.liked_posts.push(post.id);
+        for( let i = 0; i < CURRENT_USER.disliked_posts.length; i++){ 
+            if ( CURRENT_USER.disliked_posts[i] == post.id) {
+              CURRENT_USER.disliked_posts.splice(i, 1); 
+            }
+         }
+        fetch(`http://localhost:3000/users/${CURRENT_USER.id}`,{
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "Application/JSON",
+                "Accept": "Application/JSON"
+            },
+            body: JSON.stringify({
+                liked_posts: CURRENT_USER.liked_posts,
+                disliked_posts: CURRENT_USER.disliked_posts
+            })
+        })
+        .catch(error => console.error(error))
+    } else if (str == 'down'){ //remove post from user liked_posts
+        // CURRENT_USER.disliked_posts.push(post.id);
+        for( let i = 0; i < CURRENT_USER.liked_posts.length; i++){ 
+            if ( CURRENT_USER.liked_posts[i] == post.id) {
+              CURRENT_USER.liked_posts.splice(i, 1); 
+            }
+         }
+        fetch(`http://localhost:3000/users/${CURRENT_USER.id}`,{
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "Application/JSON",
+                "Accept": "Application/JSON"
+            },
+            body: JSON.stringify({
+                liked_posts: CURRENT_USER.liked_posts,
+                disliked_posts: CURRENT_USER.disliked_posts
+            })
+        })
+        .catch(error => console.error(error))
+    }
+}
+
+function userTrash(post, str){
+    if(str == 'up'){ //add post to user disliked_posts
+        CURRENT_USER.disliked_posts.push(post.id);
+        for( let i = 0; i < CURRENT_USER.liked_posts.length; i++){ 
+            if ( CURRENT_USER.liked_posts[i] == post.id) {
+              CURRENT_USER.liked_posts.splice(i, 1); 
+            }
+         }
+        fetch(`http://localhost:3000/users/${CURRENT_USER.id}`,{
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "Application/JSON",
+                "Accept": "Application/JSON"
+            },
+            body: JSON.stringify({
+                liked_posts: CURRENT_USER.liked_posts,
+                disliked_posts: CURRENT_USER.disliked_posts
+            })
+        })
+        .catch(error => console.error(error))
+    } else if (str == 'down'){ //remove post from user liked_posts
+        // CURRENT_USER.liked_posts.push(post.id);
+        for( let i = 0; i < CURRENT_USER.disliked_posts.length; i++){ 
+            if ( CURRENT_USER.disliked_posts[i] == post.id) {
+              CURRENT_USER.disliked_posts.splice(i, 1); 
+            }
+         }
+        fetch(`http://localhost:3000/users/${CURRENT_USER.id}`,{
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "Application/JSON",
+                "Accept": "Application/JSON"
+            },
+            body: JSON.stringify({
+                liked_posts: CURRENT_USER.liked_posts,
+                disliked_posts: CURRENT_USER.disliked_posts
+            })
+        })
+        .catch(error => console.error(error))
+    }
+}
